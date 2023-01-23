@@ -1,6 +1,7 @@
 ﻿using Dalamud.Configuration;
 using Dalamud.Plugin;
 using System;
+using System.Net.Http;
 
 namespace DaCoblyn
 {
@@ -9,11 +10,16 @@ namespace DaCoblyn
     {
         public int Version { get; set; } = 0;
 
+        // Property Things
+        public string TranslateURI = "http://localhost:5000/translate";
+
         public bool SomePropertyToBeSavedAndWithADefault { get; set; } = true;
 
-        // the below exist just to make saving less cumbersome
         [NonSerialized]
         private DalamudPluginInterface? PluginInterface;
+
+        // Initializor Things
+        public readonly HttpClient HttpClient = new HttpClient();
 
         public void Initialize(DalamudPluginInterface pluginInterface)
         {
