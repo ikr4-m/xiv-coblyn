@@ -12,3 +12,6 @@ We'll see if the project is too good enough for next round, we'll self host the 
 
 ## How to Use
 *Coming soon*
+
+### Support me!
+![ko-fibanner](https://uploads-ssl.webflow.com/5c14e387dab576fe667689cf/61e11d5cf697cee7ca5b65d9_Button-p-800.png)
