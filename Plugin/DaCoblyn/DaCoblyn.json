@@ -5,6 +5,8 @@
   "Description": "Translate tools that allow you to communicate with foreign friend that you doesn't know what they're saying.",
   "InternalName": "daCoblyn",
   "ApplicableVersion": "any",
+  "AssemblyVersion": "1.0.0.0",
+  "RepoUrl": "https://github.com/thatismunn/xiv-coblyn",
   "Tags": [
     "plugin",
     "translate"
