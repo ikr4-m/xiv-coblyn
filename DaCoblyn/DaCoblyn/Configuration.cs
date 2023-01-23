@@ -11,7 +11,7 @@ namespace DaCoblyn
         public int Version { get; set; } = 0;
 
         // Property Things
-        public string TranslateURI = "http://localhost:5000/translate";
+        public string TranslateURI = "https://translate.argosopentech.com/translate";
 
         public bool SomePropertyToBeSavedAndWithADefault { get; set; } = true;
 
