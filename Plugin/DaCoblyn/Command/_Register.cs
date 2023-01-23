@@ -7,10 +7,7 @@ namespace DaCoblyn.Command
     {
         private Plugin BasePlugin;
 
-        public RegisterCommand(Plugin plugin)
-        {
-            this.BasePlugin = plugin;
-        }
+        public RegisterCommand(Plugin plugin) => this.BasePlugin = plugin;
 
         public void Initialize()
         {
