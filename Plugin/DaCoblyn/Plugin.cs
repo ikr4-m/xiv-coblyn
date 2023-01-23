@@ -110,7 +110,7 @@ namespace DaCoblyn
 
         public void DrawConfigUI()
         {
-            WindowSystem.GetWindow("CoblynConfigWindow")!.IsOpen = true;
+            WindowSystem.GetWindow("Coblyn Configuration")!.IsOpen = true;
         }
     }
 }
