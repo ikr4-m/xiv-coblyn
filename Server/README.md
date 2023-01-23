@@ -1,3 +1,5 @@
+*Self-hosted server is down due to proxy port-forwarding is error.*
+
 # Launch Server
 ```sh
 chmod +x launch.sh
