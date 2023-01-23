@@ -1,10 +1,11 @@
 using Dalamud.Game.Command;
 using Dalamud.IoC;
 using Dalamud.Plugin;
-using System.IO;
 using Dalamud.Interface.Windowing;
-using DaCoblyn.Windows;
 using Dalamud.Game.Gui;
+using DaCoblyn.Windows;
+using DaCoblyn.Extension;
+using System.IO;
 
 namespace DaCoblyn
 {
@@ -15,6 +16,7 @@ namespace DaCoblyn
 
         private DalamudPluginInterface PluginInterface { get; init; }
         private CommandManager CommandManager { get; init; }
+        private ChatGui ChatGui { get; init; }
         public Configuration Configuration { get; init; }
         public WindowSystem WindowSystem = new("DaCoblyn");
 
@@ -25,6 +27,7 @@ namespace DaCoblyn
         {
             this.PluginInterface = pluginInterface;
             this.CommandManager = commandManager;
+            this.ChatGui= chatGui;
 
             this.Configuration = this.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             this.Configuration.Initialize(this.PluginInterface);
@@ -54,6 +57,7 @@ namespace DaCoblyn
         private void OnCommand(string command, string args)
         {
             WindowSystem.GetWindow("CoblynWindow")!.IsOpen = true;
+            this.ChatGui.PrintToGame("Hello world!");
         }
 
         private void DrawUI()
