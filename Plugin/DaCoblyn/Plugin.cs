@@ -3,27 +3,22 @@ using Dalamud.IoC;
 using Dalamud.Plugin;
 using Dalamud.Interface.Windowing;
 using Dalamud.Game.Gui;
+using DaCoblyn.Command;
 using DaCoblyn.Windows;
-using DaCoblyn.Extension;
 using System.IO;
-using System.Linq;
-using System.Collections.Generic;
-using System.Net.Http;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace DaCoblyn
 {
     public sealed class Plugin : IDalamudPlugin
     {
         public string Name => "Coblyn";
-        private const string CommandName = "/translate";
 
-        private DalamudPluginInterface PluginInterface { get; init; }
-        private CommandManager CommandManager { get; init; }
-        private ChatGui ChatGui { get; init; }
+        public DalamudPluginInterface PluginInterface { get; init; }
+        public CommandManager CommandManager { get; init; }
+        public ChatGui ChatGui { get; init; }
         public Configuration Configuration { get; init; }
         public WindowSystem WindowSystem = new("DaCoblyn");
+        public RegisterCommand CommandList { get; set; }
 
         public Plugin(
             [RequiredVersion("1.0")] DalamudPluginInterface pluginInterface,
@@ -47,70 +42,23 @@ namespace DaCoblyn
             WindowSystem.AddWindow(new MainWindow(this, goatImage));
 
             // Command handler
-            // TODO: Will use some DI to inject command so I don't register command one-by-one
-            this.CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
-            {
-                HelpMessage = "Translate your text to some language."
-            });
+            this.CommandList = new RegisterCommand(this);
+            this.CommandList.Initialize();
 
             // Draw window
             this.PluginInterface.UiBuilder.Draw += DrawUI;
             this.PluginInterface.UiBuilder.OpenConfigUi += DrawConfigUI;
         }
 
-        private async void OnCommand(string command, string argString)
-        {
-            //WindowSystem.GetWindow("CoblynWindow")!.IsOpen = true;
-            //this.ChatGui.PrintToGame("Hello world!");
-
-            var args = argString.Split(' ').ToList();
-            if (args.Count < 2)
-            {
-                this.ChatGui.PrintToGame("Need 2 arguments to do this command");
-                return;
-            }
-
-            this.ChatGui.PrintToGame("Translating...");
-            try
-            {
-                var targetLang = args[0];
-                var sourceLang = "auto";
-                var text = string.Join(' ', args.Skip(1).ToArray());
-                var content = new FormUrlEncodedContent(new Dictionary<string, string>
-                {
-                    { "target", targetLang },
-                    { "source", sourceLang },
-                    { "q", text },
-                    { "format", "text" }
-                });
-
-                var response = await this.Configuration.HttpClient.PostAsync(this.Configuration.TranslateURI, content);
-                var responseString = await response.Content.ReadAsStringAsync();
-
-                var decodeJson = JsonConvert.DeserializeObject<JToken>(responseString);
-                var translated = decodeJson!["translatedText"]!.ToString();
-                this.ChatGui.PrintToGame(translated);
-            }
-            catch (HttpRequestException e)
-            {
-                this.ChatGui.PrintToGame(e.Message);
-            }
-        }
-
         public void Dispose()
         {
             this.WindowSystem.RemoveAllWindows();
-            this.CommandManager.RemoveHandler(CommandName);
+            // this.CommandManager.RemoveHandler(CommandName);
+            this.CommandList.Dispose();
         }
 
-        private void DrawUI()
-        {
-            this.WindowSystem.Draw();
-        }
+        private void DrawUI() => this.WindowSystem.Draw();
 
-        public void DrawConfigUI()
-        {
-            WindowSystem.GetWindow("Coblyn Configuration")!.IsOpen = true;
-        }
+        public void DrawConfigUI() => WindowSystem.GetWindow("Coblyn Configuration")!.IsOpen = true;
     }
 }
