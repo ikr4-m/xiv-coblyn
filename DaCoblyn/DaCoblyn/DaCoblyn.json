@@ -1,0 +1,12 @@
+{
+  "Author": "Munn",
+  "Name": "DaCoblyn",
+  "Punchline": "Speak to your Japanese friend!",
+  "Description": "Translate tools that allow you to communicate with foreign friend that you doesn't know what they're saying.",
+  "InternalName": "daCoblyn",
+  "ApplicableVersion": "any",
+  "Tags": [
+    "plugin",
+    "translate"
+  ]
+}
