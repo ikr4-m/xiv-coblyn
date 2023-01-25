@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Dalamud.Game.Command;
 
 namespace DaCoblyn.Command
@@ -6,7 +7,7 @@ namespace DaCoblyn.Command
     public class RegisterCommand : IDisposable
     {
         private Plugin BasePlugin;
-
+        public Dictionary<string, BaseCommand> CommandList = new Dictionary<string, BaseCommand>();
         public RegisterCommand(Plugin plugin) => this.BasePlugin = plugin;
 
         public void Initialize()
@@ -17,42 +18,32 @@ namespace DaCoblyn.Command
 
         public void Dispose()
         {
-            RemoveCommand(new TranslateCommand(this.BasePlugin));
-            RemoveCommand(new OpenConfigCommand(this.BasePlugin));
+            foreach (var key in CommandList.Keys)
+            {
+                this.BasePlugin.CommandManager.RemoveHandler(key);
+            }
         }
 
         private void AddCommand(BaseCommand cmd)
         {
             if (cmd.Command != null)
             {
+                CommandList.Add(cmd.Command, cmd);
                 this.BasePlugin.CommandManager.AddHandler(cmd.Command, new CommandInfo(cmd.Execute)
                 {
                     HelpMessage = cmd.HelpMessage
                 });
             }
-            else
+
+            if (cmd.CommandLiterate != null)
             {
-                foreach (var cmds in cmd.CommandLiterate!)
+                foreach (var cmds in cmd.CommandLiterate)
                 {
+                    CommandList.Add(cmds, cmd);
                     this.BasePlugin.CommandManager.AddHandler(cmds, new CommandInfo(cmd.Execute)
                     {
                         HelpMessage = cmd.HelpMessage
                     });
-                }
-            }
-        }
-
-        private void RemoveCommand(BaseCommand cmd)
-        {
-            if (cmd.Command != null)
-            {
-                this.BasePlugin.CommandManager.RemoveHandler(cmd.Command);
-            }
-            else
-            {
-                foreach (var cmds in cmd.CommandLiterate!)
-                {
-                    this.BasePlugin.CommandManager.RemoveHandler(cmds);
                 }
             }
         }
