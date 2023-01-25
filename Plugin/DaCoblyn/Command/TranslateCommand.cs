@@ -1,14 +1,15 @@
 using DaCoblyn.Extension;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using DaCoblyn.Function;
+using System;
 using System.Linq;
 using System.Net.Http;
-using System.Collections.Generic;
 
 namespace DaCoblyn.Command
 {
     public class TranslateCommand : BaseCommand
     {
+        private HttpClient _httpClient = new HttpClient();
+
         public TranslateCommand(Plugin plugin) : base(plugin)
         {
             Command = "/translate";
@@ -17,9 +18,6 @@ namespace DaCoblyn.Command
 
         public override async void Execute(string command, string argString)
         {
-            //WindowSystem.GetWindow("CoblynWindow")!.IsOpen = true;
-            //this.ChatGui.PrintToGame("Hello world!");
-
             var args = argString.Split(' ').ToList();
             if (args.Count < 2)
             {
@@ -33,24 +31,16 @@ namespace DaCoblyn.Command
                 var targetLang = args[0];
                 var sourceLang = "auto";
                 var text = string.Join(' ', args.Skip(1).ToArray());
-                var content = new FormUrlEncodedContent(new Dictionary<string, string>
-                {
-                    { "target", targetLang },
-                    { "source", sourceLang },
-                    { "q", text },
-                    { "format", "text" }
-                });
 
-                var response = await BasePlugin.Configuration.HttpClient.PostAsync(BasePlugin.Configuration.TranslateURI, content);
-                var responseString = await response.Content.ReadAsStringAsync();
-
-                var decodeJson = JsonConvert.DeserializeObject<JToken>(responseString);
-                var translated = decodeJson!["translatedText"]!.ToString();
-                BasePlugin.ChatGui.PrintToGame(translated);
+                var data = await new LibreConnector(_httpClient, Global.TranslateURI)
+                    .TranslateQuery(sourceLang, targetLang, text);
+                
+                BasePlugin.ChatGui.PrintToGame(data ?? "No response");
             }
-            catch (HttpRequestException e)
+            catch (Exception e)
             {
                 BasePlugin.ChatGui.PrintToGame(e.Message);
+                BasePlugin.ChatGui.PrintToGame(e.StackTrace ?? "");
             }
         }
     }
