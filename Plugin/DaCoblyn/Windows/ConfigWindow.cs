@@ -68,9 +68,13 @@ public class ConfigWindow : Window, IDisposable
             ImGui.NextColumn();
             if (ImGui.BeginCombo("##targetLang", targetDisplayLang))
             {
-                foreach (var lang in modSourceLang)
+                foreach (var lang in BasePlugin.LanguageSupported)
                 {
-                    ImGui.Selectable(lang.Name, lang.Code == targetLang);
+                    if (ImGui.Selectable(lang.Name, lang.Code == targetLang) && lang.Code != targetLang)
+                    {
+                        Configuration.TargetLanguage = lang.Code;
+                        Configuration.Save();
+                    }
                 }
                 ImGui.EndCombo();
             }
@@ -98,10 +102,5 @@ public class ConfigWindow : Window, IDisposable
         {
             //
         }
-    }
-
-    public static class ChatChannelSupported
-    {
-        // public static XivChatType 
     }
 }

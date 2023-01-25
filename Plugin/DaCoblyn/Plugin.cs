@@ -62,6 +62,7 @@ namespace DaCoblyn
             this.PluginInterface.UiBuilder.OpenConfigUi += DrawConfigUI;
 
             // Register language supported
+            this.LanguageSupported = new List<LibreLanguageResponse>();
             try
             {
                 var task = new Task(async () =>
