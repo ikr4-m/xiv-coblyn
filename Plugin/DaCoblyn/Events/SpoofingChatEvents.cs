@@ -1,5 +1,6 @@
 using Dalamud.Game.Text;
 using Dalamud.Game.Text.SeStringHandling;
+using Dalamud.Game.Text.SeStringHandling.Payloads;
 using DaCoblyn.Extension;
 
 namespace DaCoblyn.Events
@@ -14,7 +15,18 @@ namespace DaCoblyn.Events
         private void Execute(XivChatType type, uint senderId, ref SeString sender, ref SeString message, ref bool isHandled)
         {
             if (type != XivChatType.Say) return;
-            BasePlugin.ChatGui.PrintToGame(message.ToJson());
+
+            var senderStr = sender.TextValue;
+            var messageStr = "";
+            foreach (var msgPayload in message.Payloads)
+            {
+                if (msgPayload.GetType() == typeof(AutoTranslatePayload))
+                    messageStr += (msgPayload as AutoTranslatePayload)!.Text[1..^1];
+                else
+                    messageStr += (msgPayload as TextPayload)!.Text + " ";
+            }
+
+            BasePlugin.ChatGui.PrintToGame($"[{senderStr} {messageStr.Trim()}");
         }
 
         public override void Dispose()
