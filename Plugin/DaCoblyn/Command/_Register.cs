@@ -12,11 +12,13 @@ namespace DaCoblyn.Command
         public void Initialize()
         {
             AddCommand(new TranslateCommand(this.BasePlugin));
+            AddCommand(new OpenConfigCommand(this.BasePlugin));
         }
 
         public void Dispose()
         {
             RemoveCommand(new TranslateCommand(this.BasePlugin));
+            RemoveCommand(new OpenConfigCommand(this.BasePlugin));
         }
 
         private void AddCommand(BaseCommand cmd)

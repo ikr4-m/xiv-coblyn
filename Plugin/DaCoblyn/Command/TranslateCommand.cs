@@ -12,7 +12,7 @@ namespace DaCoblyn.Command
 
         public TranslateCommand(Plugin plugin) : base(plugin)
         {
-            Command = "/translate";
+            CommandLiterate = new string[] { "/tl", "/translate" };
             HelpMessage = "Translate some text to some languages.";
         }
 
