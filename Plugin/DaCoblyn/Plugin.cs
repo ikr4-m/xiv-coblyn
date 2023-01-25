@@ -3,10 +3,16 @@ using Dalamud.IoC;
 using Dalamud.Plugin;
 using Dalamud.Interface.Windowing;
 using Dalamud.Game.Gui;
+using DaCoblyn.Extension;
+using DaCoblyn.Function;
 using DaCoblyn.Command;
 using DaCoblyn.Events;
 using DaCoblyn.Windows;
+using System;
 using System.IO;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace DaCoblyn
 {
@@ -21,6 +27,7 @@ namespace DaCoblyn
         public WindowSystem WindowSystem = new("DaCoblyn");
         public RegisterCommand CommandList { get; set; }
         public RegisterEvents EventsList { get; set; }
+        public List<LibreLanguageResponse> LanguageSupported { get; set; }
 
         public Plugin(
             [RequiredVersion("1.0")] DalamudPluginInterface pluginInterface,
@@ -41,7 +48,6 @@ namespace DaCoblyn
 
             // Register window
             WindowSystem.AddWindow(new ConfigWindow(this));
-            WindowSystem.AddWindow(new MainWindow(this, goatImage));
 
             // Command handler
             this.CommandList = new RegisterCommand(this);
@@ -54,6 +60,26 @@ namespace DaCoblyn
             // Draw window
             this.PluginInterface.UiBuilder.Draw += DrawUI;
             this.PluginInterface.UiBuilder.OpenConfigUi += DrawConfigUI;
+
+            // Register language supported
+            try
+            {
+                var task = new Task(async () =>
+                {
+                    var httpClient = new HttpClient();
+                    var connector = new LibreConnector(httpClient, Global.TranslateURI);
+                    this.LanguageSupported = await connector.GetLanguageSupported() ?? new List<LibreLanguageResponse>()
+                    {
+                        new LibreLanguageResponse() { Code = "en", Name = "Engilsh" },
+                        new LibreLanguageResponse() { Code = "ja", Name = "Japanese" },
+                    };
+                });
+                task.RunSynchronously();
+            }
+            catch (Exception e)
+            {
+                this.ChatGui.PrintToGame(e.Message);
+            }
         }
 
         public void Dispose()

@@ -47,6 +47,20 @@ namespace DaCoblyn.Function
 
             return JsonConvert.DeserializeObject<JToken>(data)!["translatedText"]!.ToString();
         }
+
+        public async Task<List<LibreLanguageResponse>?> GetLanguageSupported()
+        {
+            var path = _uri + "/languages";
+            var response = await _client.GetAsync(path);
+            var data = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<List<LibreLanguageResponse>>(data);
+        }
+    }
+
+    public class LibreLanguageResponse
+    {
+        [JsonProperty("code")] public string Code { get; set; } = null!;
+        [JsonProperty("name")] public string Name { get; set; } = null!;
     }
 
     public class LibreDetectResponse

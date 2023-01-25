@@ -1,6 +1,7 @@
 ﻿using Dalamud.Configuration;
 using Dalamud.Plugin;
 using System;
+using System.Collections.Generic;
 
 namespace DaCoblyn
 {
@@ -9,8 +10,13 @@ namespace DaCoblyn
     {
         public int Version { get; set; } = 0;
 
-        // Property Things
-        public bool SomePropertyToBeSavedAndWithADefault { get; set; } = true;
+        public bool EnablePlugin { get; set; } = false;
+        public string SourceLanguage { get; set; } = "auto";
+        public string TargetLanguage { get; set; } = "ja";
+        public List<string> IgnoreLanguage { get; set; } = new List<string>()
+        {
+            "en"
+        };
 
         [NonSerialized]
         private DalamudPluginInterface? PluginInterface;
