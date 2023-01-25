@@ -4,6 +4,7 @@ using Dalamud.Plugin;
 using Dalamud.Interface.Windowing;
 using Dalamud.Game.Gui;
 using DaCoblyn.Command;
+using DaCoblyn.Events;
 using DaCoblyn.Windows;
 using System.IO;
 
@@ -19,6 +20,7 @@ namespace DaCoblyn
         public Configuration Configuration { get; init; }
         public WindowSystem WindowSystem = new("DaCoblyn");
         public RegisterCommand CommandList { get; set; }
+        public RegisterEvents EventsList { get; set; }
 
         public Plugin(
             [RequiredVersion("1.0")] DalamudPluginInterface pluginInterface,
@@ -45,6 +47,10 @@ namespace DaCoblyn
             this.CommandList = new RegisterCommand(this);
             this.CommandList.Initialize();
 
+            // Register event
+            this.EventsList = new RegisterEvents(this);
+            this.EventsList.Initialize();
+
             // Draw window
             this.PluginInterface.UiBuilder.Draw += DrawUI;
             this.PluginInterface.UiBuilder.OpenConfigUi += DrawConfigUI;
@@ -53,8 +59,8 @@ namespace DaCoblyn
         public void Dispose()
         {
             this.WindowSystem.RemoveAllWindows();
-            // this.CommandManager.RemoveHandler(CommandName);
             this.CommandList.Dispose();
+            this.EventsList.Dispose();
         }
 
         private void DrawUI() => this.WindowSystem.Draw();
