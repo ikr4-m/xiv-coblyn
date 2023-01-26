@@ -65,7 +65,7 @@ namespace DaCoblyn.Function
 
     public class LibreDetectResponse
     {
-        [JsonProperty("confidence")] public int Confidence { get; set; }
+        [JsonProperty("confidence")] public float Confidence { get; set; }
 
         [JsonProperty("language")] public string Language { get; set; } = null!;
     }
