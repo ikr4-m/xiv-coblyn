@@ -25,9 +25,13 @@ namespace DaCoblyn.Events
             if (!BasePlugin.Configuration.EnablePlugin) return;
             if (BasePlugin.Configuration.ChannelListened.Where(x => x == type).Count() == 0) return;
 
+            var senderStr = sender.TextValue;
+            var local = BasePlugin.Client?.LocalPlayer;
+            if (local == null || local.HomeWorld.GameData?.Name == null) return;
+            if (!BasePlugin.Configuration.TranslateYourself && senderStr == local.Name.ToString()) return;
+
             try
             {
-                var senderStr = sender.TextValue;
                 var messageStr = "";
                 foreach (var msgPayload in message.Payloads)
                 {

@@ -60,14 +60,12 @@ public class ConfigWindow : Window, IDisposable
             ImGui.EndTable();
         }
 
-        // TODO: Make this config is working
-        // CLUE: Events/SpoofingChatEvents.cs
-        // var translatePlayer = Configuration.TranslateYourself;
-        // if (ImGui.Checkbox("Translate text from yourself.", ref translatePlayer))
-        // {
-        //     Configuration.TranslateYourself = translatePlayer;
-        //     Configuration.Save();
-        // }
+        var translatePlayer = Configuration.TranslateYourself;
+        if (ImGui.Checkbox("Translate text from yourself.", ref translatePlayer))
+        {
+            Configuration.TranslateYourself = translatePlayer;
+            Configuration.Save();
+        }
         ImGui.Separator();
 
         if (ImGui.CollapsingHeader("Source & Target Language"))
