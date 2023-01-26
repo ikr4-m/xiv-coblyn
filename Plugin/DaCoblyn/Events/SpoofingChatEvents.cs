@@ -1,34 +1,68 @@
+using System;
 using System.Linq;
+using System.Net.Http;
 using Dalamud.Game.Text;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using DaCoblyn.Extension;
+using DaCoblyn.Function;
 
 namespace DaCoblyn.Events
 {
     public class SpoofingChatEvents : BaseEvents
     {
+        private LibreConnector Connector = new LibreConnector(new HttpClient(), Global.TranslateURI);
+
         public SpoofingChatEvents(Plugin plugin) : base(plugin)
         {
             BasePlugin.ChatGui.ChatMessage += Execute;
         }
 
-        private void Execute(XivChatType type, uint senderId, ref SeString sender, ref SeString message, ref bool isHandled)
+        private void Execute(XivChatType type, uint senderId, ref SeString sender, ref SeString message, ref bool isHandled)=> ExecuteAsync(type, senderId, sender, message, isHandled);
+
+        private async void ExecuteAsync(XivChatType type, uint senderId, SeString sender, SeString message, bool isHandled)
         {
             if (!BasePlugin.Configuration.EnablePlugin) return;
             if (BasePlugin.Configuration.ChannelListened.Where(x => x == type).Count() == 0) return;
 
-            var senderStr = sender.TextValue;
-            var messageStr = "";
-            foreach (var msgPayload in message.Payloads)
+            try
             {
-                if (msgPayload.GetType() == typeof(AutoTranslatePayload))
-                    messageStr += (msgPayload as AutoTranslatePayload)!.Text[1..^1];
-                else
-                    messageStr += (msgPayload as TextPayload)!.Text + " ";
-            }
+                var senderStr = sender.TextValue;
+                var messageStr = "";
+                foreach (var msgPayload in message.Payloads)
+                {
+                    // Keep auto translate not translate
+                    if (msgPayload.GetType() == typeof(AutoTranslatePayload))
+                        messageStr += (msgPayload as AutoTranslatePayload)!.Text[1..^1];
+                    // Translate each payload
+                    else if (msgPayload.GetType() == typeof(TextPayload))
+                    {
+                        var text = (msgPayload as TextPayload)!.Text;
+                        var sourceLang = BasePlugin.Configuration.SourceLanguage;
+                        var targetLang = BasePlugin.Configuration.TargetLanguage;
 
-            BasePlugin.ChatGui.PrintToGame($"[{senderStr} {messageStr.Trim()}");
+                        var detected = await Connector.DetectLanguage(text ?? "");
+                        if (detected == null)
+                        {
+                            BasePlugin.ChatGui.PrintToGame("The language is not supported from Argos Translate.");
+                            return;
+                        }
+                        if (targetLang == detected.Language) return;
+
+                        var translated = await Connector.TranslateQuery(sourceLang, targetLang, text ?? "");
+                        if (translated == null) return;
+                        messageStr += translated + " ";
+                    }
+                    else
+                        messageStr += msgPayload.ToString() + " ";
+                }
+
+                BasePlugin.ChatGui.PrintToGame($"[{type.ToString()}][{senderStr}] {messageStr.Trim()}");
+            }
+            catch (Exception e)
+            {
+                BasePlugin.ChatGui.PrintException(e);
+            }
         }
 
         public override void Dispose()
