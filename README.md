@@ -16,5 +16,9 @@ Just add this url to your Custom Plugin Repositories:
 https://raw.githubusercontent.com/thatismunn/xiv-coblyn/main/repo.json
 ```
 
+## Command List
+- /tl or /translate: Translate plain text. Check supported link [here.](https://translate.argosopentech.com/languages)
+- /coblynconfig: Open configuration window.
+
 ### Support me!
 [![ko-fibanner](https://uploads-ssl.webflow.com/5c14e387dab576fe667689cf/61e11d5cf697cee7ca5b65d9_Button-p-800.png)](https://ko-fi.com/thatismunn)
