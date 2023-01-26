@@ -1,4 +1,5 @@
 ﻿using Dalamud.Game.Command;
+using Dalamud.Game.ClientState;
 using Dalamud.IoC;
 using Dalamud.Plugin;
 using Dalamud.Interface.Windowing;
@@ -24,6 +25,7 @@ namespace DaCoblyn
         public CommandManager CommandManager { get; init; }
         public ChatGui ChatGui { get; init; }
         public Configuration Configuration { get; init; }
+        public ClientState Client { get; init; }
         public WindowSystem WindowSystem = new("DaCoblyn");
         public RegisterCommand CommandList { get; set; }
         public RegisterEvents EventsList { get; set; }
@@ -32,12 +34,14 @@ namespace DaCoblyn
         public Plugin(
             [RequiredVersion("1.0")] DalamudPluginInterface pluginInterface,
             [RequiredVersion("1.0")] CommandManager commandManager,
-            [RequiredVersion("1.0")] ChatGui chatGui)
+            [RequiredVersion("1.0")] ChatGui chatGui,
+            [RequiredVersion("1.0")] ClientState client)
         {
             this.PluginInterface = pluginInterface;
             this.CommandManager = commandManager;
-            this.ChatGui= chatGui;
-
+            this.ChatGui = chatGui;
+            this.Client = client;
+            
             // Register configuration
             this.Configuration = this.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             this.Configuration.Initialize(this.PluginInterface);

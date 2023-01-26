@@ -41,13 +41,29 @@ namespace DaCoblyn.Events
                         var sourceLang = BasePlugin.Configuration.SourceLanguage;
                         var targetLang = BasePlugin.Configuration.TargetLanguage;
 
-                        var detected = await Connector.DetectLanguage(text ?? "");
-                        if (detected == null)
+                        // Since we provide support to auto-detect translate and "focus" sourceLang,
+                        // if player didn't choose Automatic as source language, the plugin will not
+                        // try to communicate to server for detecting language.
+                        if (sourceLang == "auto")
                         {
-                            BasePlugin.ChatGui.PrintToGame("The language is not supported from Argos Translate.");
-                            return;
+                            var detected = await Connector.DetectLanguage(text ?? "");
+                            if (detected == null)
+                            {
+                                BasePlugin.ChatGui.PrintToGame("The language is not supported from Argos Translate.");
+                                return;
+                            }
+                            if (detected.Confidence < 60f)
+                            {
+                                BasePlugin.ChatGui.PrintToGame("The confident level too low. Rejected to translate it.");
+                                return;
+                            }
+                            if (targetLang == detected.Language) return;
+
+                            sourceLang = detected.Language;
                         }
-                        if (targetLang == detected.Language) return;
+
+                        // Ignore blacklisted language
+                        if (BasePlugin.Configuration.IgnoreLanguage.Where(x => x == sourceLang).Count() > 0) return;
 
                         var translated = await Connector.TranslateQuery(sourceLang, targetLang, text ?? "");
                         if (translated == null) return;
