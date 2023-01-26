@@ -1,3 +1,4 @@
+using System.Linq;
 using Dalamud.Game.Text;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
@@ -14,7 +15,8 @@ namespace DaCoblyn.Events
 
         private void Execute(XivChatType type, uint senderId, ref SeString sender, ref SeString message, ref bool isHandled)
         {
-            if (type != XivChatType.Say) return;
+            if (!BasePlugin.Configuration.EnablePlugin) return;
+            if (BasePlugin.Configuration.ChannelListened.Where(x => x == type).Count() == 0) return;
 
             var senderStr = sender.TextValue;
             var messageStr = "";
