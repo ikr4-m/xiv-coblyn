@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Numerics;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Dalamud.Game.Text;
 using Dalamud.Interface.Windowing;
 using DaCoblyn.Function;
@@ -29,12 +30,36 @@ public class ConfigWindow : Window, IDisposable
 
     public override void Draw()
     {
-        var enablePlugin = Configuration.EnablePlugin;
-        if (ImGui.Checkbox("Enable Plugin", ref enablePlugin))
+        ImGui.Text("Before enable this plugin, make sure all the configuration is perfect for you.");
+        if (ImGui.BeginTable("", 2, ImGuiTableFlags.None))
         {
-            Configuration.EnablePlugin = enablePlugin;
-            Configuration.Save();
+            ImGui.TableSetupColumn("", ImGuiTableColumnFlags.None, 370f);
+            ImGui.TableSetupColumn("", ImGuiTableColumnFlags.None, 130f);
+            ImGui.TableNextColumn();
+
+            var enablePlugin = Configuration.EnablePlugin;
+            if (ImGui.Checkbox("Enable Plugin", ref enablePlugin))
+            {
+                Configuration.EnablePlugin = enablePlugin;
+                Configuration.Save();
+            }
+            ImGui.TableNextColumn();
+
+            ImGui.PushStyleColor(ImGuiCol.Button, 0xFF000000 | 0x005E5BFF);
+            ImGui.PushStyleColor(ImGuiCol.ButtonActive, 0xDD000000 | 0x005E5BFF);
+            ImGui.PushStyleColor(ImGuiCol.ButtonHovered, 0xAA000000 | 0x005E5BFF);
+            if (ImGui.Button("Support me on Ko-fi!"))
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = "https://ko-fi.com/thatismunn",
+                    UseShellExecute = true
+                });
+            }
+            ImGui.EndTable();
         }
+
+        ImGui.PopStyleColor(3);
         ImGui.Separator();
 
         if (ImGui.CollapsingHeader("Source & Target Language"))
@@ -115,5 +140,6 @@ public class ConfigWindow : Window, IDisposable
                 }
             }
         }
+
     }
 }
