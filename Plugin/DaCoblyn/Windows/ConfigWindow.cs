@@ -100,7 +100,20 @@ public class ConfigWindow : Window, IDisposable
 
         if (ImGui.CollapsingHeader("Translate the Channel"))
         {
-            //
+            var channelList = Enum.GetNames(typeof(XivChatType)).ToList();
+            var channelListened = Configuration.ChannelListened;
+            foreach (var channel in channelList)
+            {
+                var numType = (XivChatType)Enum.Parse(typeof(XivChatType), channel);
+                var isChecked = channelListened.Where(x => x == numType).Count() > 0;
+                if (ImGui.Checkbox(channel, ref isChecked))
+                {
+                    if (isChecked) channelListened.Add(numType);
+                    else channelListened.Remove(numType);
+                    Configuration.ChannelListened = channelListened;
+                    Configuration.Save();
+                }
+            }
         }
     }
 }
