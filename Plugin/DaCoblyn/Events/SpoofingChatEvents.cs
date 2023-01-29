@@ -24,6 +24,7 @@ namespace DaCoblyn.Events
         {
             if (!BasePlugin.Configuration.EnablePlugin) return;
             if (BasePlugin.Configuration.ChannelListened.Where(x => x == type).Count() == 0) return;
+            if (message.Payloads.Where(x => x.GetType() == typeof(TextPayload)).Count() == 0) return;
 
             var senderStr = sender.TextValue;
             var local = BasePlugin.Client?.LocalPlayer;
