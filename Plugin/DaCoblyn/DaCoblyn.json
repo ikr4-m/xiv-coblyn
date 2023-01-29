@@ -5,12 +5,12 @@
   "Description": "Translate tools that allow you to communicate with foreign friend that you doesn't know what they're saying.",
   "InternalName": "daCoblyn",
   "ApplicableVersion": "any",
-  "AssemblyVersion": "1.0.0.0",
+  "AssemblyVersion": "1.0.0.1",
   "RepoUrl": "https://github.com/thatismunn/xiv-coblyn",
   "IconUrl": "https://raw.githubusercontent.com/thatismunn/xiv-coblyn/main/coblyn.png",
-  "DownloadLinkInstall": "https://github.com/thatismunn/xiv-coblyn/releases/download/1.0.0.0/DaCoblyn.zip",
-  "DownloadLinkTesting": "https://github.com/thatismunn/xiv-coblyn/releases/download/1.0.0.0/DaCoblyn.zip",
-  "DownloadLinkUpdate": "https://github.com/thatismunn/xiv-coblyn/releases/download/1.0.0.0/DaCoblyn.zip",
+  "DownloadLinkInstall": "https://github.com/thatismunn/xiv-coblyn/releases/download/1.0.0.1/DaCoblyn.zip",
+  "DownloadLinkTesting": "https://github.com/thatismunn/xiv-coblyn/releases/download/1.0.0.1/DaCoblyn.zip",
+  "DownloadLinkUpdate": "https://github.com/thatismunn/xiv-coblyn/releases/download/1.0.0.1/DaCoblyn.zip",
   "Tags": [
     "plugin",
     "translate"
