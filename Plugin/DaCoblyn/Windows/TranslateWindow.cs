@@ -2,10 +2,11 @@ using System;
 using System.Linq;
 using System.Numerics;
 using System.Collections.Generic;
-using System.Diagnostics;
-using Dalamud.Game.Text;
+using System.Net.Http;
+using System.Threading.Tasks;
 using Dalamud.Interface.Windowing;
 using DaCoblyn.Function;
+using DaCoblyn.Extension;
 using ImGuiNET;
 
 namespace DaCoblyn.Windows;
@@ -13,7 +14,7 @@ public class TranslateWindow : Window, IDisposable
 {
     private Configuration Configuration;
     private Plugin BasePlugin;
-    public int Count { get; set; } = 0;
+    private LibreConnector Connector = new LibreConnector(new HttpClient(), Global.TranslateURI);
 
     private string _targetLang = "";
     private string _targetInput = "";
@@ -34,6 +35,21 @@ public class TranslateWindow : Window, IDisposable
     }
 
     public void Dispose() { }
+
+    public async void ExecuteTranslate()
+    {
+        try
+        {
+            _targetInput = "Loading...";
+            var translated = await Connector.TranslateQuery(_sourceLang, _targetLang, _sourceInput);
+            _targetInput = translated == null ? "Please try again" : translated;
+        }
+        catch (Exception e)
+        {
+            _targetInput = e.Message;
+            BasePlugin.ChatGui.PrintException(e);
+        }
+    }
 
     public override void Draw()
     {
@@ -88,7 +104,10 @@ public class TranslateWindow : Window, IDisposable
             ImGui.EndTable();
         }
 
-        ImGui.Button("Translate");
+        if (ImGui.Button("Translate"))
+        {
+            _ = Task.Run(() => ExecuteTranslate());
+        }
         ImGui.SameLine();
         if (ImGui.Button("Reset"))
         {
