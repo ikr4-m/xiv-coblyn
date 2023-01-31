@@ -28,6 +28,7 @@ namespace DaCoblyn
         public WindowSystem WindowSystem = new("DaCoblyn");
         public RegisterCommand CommandList { get; set; }
         public RegisterEvents EventsList { get; set; }
+        public RegisterWindow WindowManager { get; set; }
         public List<LibreLanguageResponse> LanguageSupported { get; set; }
 
         public Plugin(
@@ -46,8 +47,8 @@ namespace DaCoblyn
             this.Configuration.Initialize(this.PluginInterface);
 
             // Register window
-            WindowSystem.AddWindow(new ConfigWindow(this));
-            WindowSystem.AddWindow(new TranslateWindow(this));
+            this.WindowManager = new RegisterWindow(this);
+            this.WindowManager.Initialize();
 
             // Command handler
             this.CommandList = new RegisterCommand(this);
