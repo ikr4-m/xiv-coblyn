@@ -78,7 +78,11 @@ public class TranslateWindow : Window, IDisposable
                 ImGui.EndCombo();
             }
             ImGui.TableNextColumn();
-            ImGui.Button("\u21D4");
+            if (_sourceLang != "auto")
+            {
+                if (ImGui.Button("\u21D4"))
+                    (_sourceLang, _targetLang) = (_targetLang, _sourceLang);
+            }
             ImGui.TableNextColumn();
             var targetLang = BasePlugin.LanguageSupported.Where(x => x.Code == _targetLang).FirstOrDefault();
             var targetLangDisplay = targetLang == null ? "Null" : targetLang.Name;
