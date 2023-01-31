@@ -8,6 +8,7 @@ using Dalamud.Interface.Windowing;
 using DaCoblyn.Function;
 using DaCoblyn.Extension;
 using ImGuiNET;
+using TextCopy;
 
 namespace DaCoblyn.Windows;
 public class TranslateWindow : Window, IDisposable
@@ -115,8 +116,8 @@ public class TranslateWindow : Window, IDisposable
             _targetInput = "";
         }
         ImGui.SameLine();
-        ImGui.Button("Copy left column to clipboard");
+        if (ImGui.Button("Copy left column to clipboard")) ClipboardService.SetText(_sourceInput);
         ImGui.SameLine();
-        ImGui.Button("Copy right button to clipboard");
+        if (ImGui.Button("Copy right button to clipboard")) ClipboardService.SetText(_targetInput);
     }
 }
