@@ -10,7 +10,6 @@ using DaCoblyn.Command;
 using DaCoblyn.Events;
 using DaCoblyn.Windows;
 using System;
-using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Collections.Generic;
@@ -48,6 +47,7 @@ namespace DaCoblyn
 
             // Register window
             WindowSystem.AddWindow(new ConfigWindow(this));
+            WindowSystem.AddWindow(new TranslateWindow(this));
 
             // Command handler
             this.CommandList = new RegisterCommand(this);

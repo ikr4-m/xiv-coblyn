@@ -16,32 +16,33 @@ namespace DaCoblyn.Command
             HelpMessage = "Translate some text to some languages.";
         }
 
-        public override async void Execute(string command, string argString)
+        public override void Execute(string command, string argString)
         {
-            var args = argString.Split(' ').ToList();
-            if (args.Count < 2)
-            {
-                BasePlugin.ChatGui.PrintToGame("Need 2 arguments to do this command! /translate <target> <text>");
-                return;
-            }
+            BasePlugin.WindowSystem.GetWindow("Translator")!.IsOpen = true;
+            // var args = argString.Split(' ').ToList();
+            // if (args.Count < 2)
+            // {
+            //     BasePlugin.ChatGui.PrintToGame("Need 2 arguments to do this command! /translate <target> <text>");
+            //     return;
+            // }
 
-            BasePlugin.ChatGui.PrintToGame("Translating...");
-            try
-            {
-                var targetLang = args[0];
-                var sourceLang = "auto";
-                var text = string.Join(' ', args.Skip(1).ToArray());
+            // BasePlugin.ChatGui.PrintToGame("Translating...");
+            // try
+            // {
+            //     var targetLang = args[0];
+            //     var sourceLang = "auto";
+            //     var text = string.Join(' ', args.Skip(1).ToArray());
 
-                var data = await new LibreConnector(_httpClient, Global.TranslateURI)
-                    .TranslateQuery(sourceLang, targetLang, text);
+            //     var data = await new LibreConnector(_httpClient, Global.TranslateURI)
+            //         .TranslateQuery(sourceLang, targetLang, text);
                 
-                BasePlugin.ChatGui.PrintToGame(data ?? "No response");
-            }
-            catch (Exception e)
-            {
-                BasePlugin.ChatGui.PrintToGame(e.Message);
-                BasePlugin.ChatGui.PrintToGame(e.StackTrace ?? "");
-            }
+            //     BasePlugin.ChatGui.PrintToGame(data ?? "No response");
+            // }
+            // catch (Exception e)
+            // {
+            //     BasePlugin.ChatGui.PrintToGame(e.Message);
+            //     BasePlugin.ChatGui.PrintToGame(e.StackTrace ?? "");
+            // }
         }
     }
 }
