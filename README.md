@@ -17,7 +17,7 @@ https://raw.githubusercontent.com/thatismunn/xiv-coblyn/main/repo.json
 ```
 
 ## Command List
-- /tl or /translate: Translate plain text. Check supported link [here.](https://translate.argosopentech.com/languages)
+- /tl or /translate: Open translate window.
 - /coblynconfig: Open configuration window.
 
 ### Support me!
