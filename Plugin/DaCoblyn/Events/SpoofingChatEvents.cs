@@ -59,6 +59,7 @@ namespace DaCoblyn.Events
                             }
                             if (detected.Confidence < 60f)
                             {
+                                if (BasePlugin.Configuration.IgnoreLanguage.Where(x => x == detected.Language).Count() > 0) return;
                                 BasePlugin.ChatGui.PrintToGame("The confident level too low. Rejected to translate it.");
                                 return;
                             }
