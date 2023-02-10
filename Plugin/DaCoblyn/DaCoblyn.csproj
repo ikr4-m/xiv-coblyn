@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Authors></Authors>
     <Company></Company>
-    <Version>1.0.1.7</Version>
+    <Version>1.0.2.1</Version>
     <Description>Some plugin.</Description>
     <Copyright></Copyright>
     <PackageProjectUrl>https://github.com/thatismunn/xiv-coblyn</PackageProjectUrl>
