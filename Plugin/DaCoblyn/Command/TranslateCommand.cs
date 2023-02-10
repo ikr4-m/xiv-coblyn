@@ -1,3 +1,5 @@
+using DaCoblyn.Extension;
+using DaCoblyn.Windows;
 using System.Net.Http;
 
 namespace DaCoblyn.Command
@@ -14,7 +16,7 @@ namespace DaCoblyn.Command
 
         public override void Execute(string command, string argString)
         {
-            BasePlugin.WindowSystem.GetWindow("Translator")!.IsOpen = true;
+            BasePlugin.WindowSystem.OpenWindow(typeof(TranslateWindow));
         }
     }
 }

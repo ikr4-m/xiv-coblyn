@@ -10,6 +10,7 @@ using DaCoblyn.Command;
 using DaCoblyn.Events;
 using DaCoblyn.Windows;
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Collections.Generic;
@@ -93,6 +94,6 @@ namespace DaCoblyn
 
         private void DrawUI() => this.WindowSystem.Draw();
 
-        public void DrawConfigUI() => WindowSystem.GetWindow("Coblyn Configuration")!.IsOpen = true;
+        public void DrawConfigUI() => this.WindowSystem.OpenWindow(typeof(ConfigWindow));
     }
 }

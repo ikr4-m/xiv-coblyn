@@ -1,3 +1,6 @@
+using DaCoblyn.Extension;
+using DaCoblyn.Windows;
+
 namespace DaCoblyn.Command
 {
     public class OpenConfigCommand : BaseCommand
@@ -10,7 +13,7 @@ namespace DaCoblyn.Command
 
         public override void Execute(string command, string argString)
         {
-            BasePlugin.WindowSystem.GetWindow("Coblyn Configuration")!.IsOpen = true;
+            BasePlugin.WindowSystem.OpenWindow(typeof(ConfigWindow));
         }
     }
 }
