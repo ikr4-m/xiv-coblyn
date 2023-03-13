@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.Command;
+using Dalamud.Game.Command;
 using Dalamud.Game.ClientState;
 using Dalamud.IoC;
 using Dalamud.Plugin;
@@ -65,24 +65,7 @@ namespace DaCoblyn
 
             // Register language supported
             this.LanguageSupported = new List<LibreLanguageResponse>();
-            try
-            {
-                var task = new Task(async () =>
-                {
-                    var httpClient = new HttpClient();
-                    var connector = new LibreConnector(httpClient, Global.TranslateURI);
-                    this.LanguageSupported = await connector.GetLanguageSupported() ?? new List<LibreLanguageResponse>()
-                    {
-                        new LibreLanguageResponse() { Code = "en", Name = "Engilsh" },
-                        new LibreLanguageResponse() { Code = "ja", Name = "Japanese" },
-                    };
-                });
-                task.RunSynchronously();
-            }
-            catch (Exception e)
-            {
-                this.ChatGui.PrintToGame(e.Message);
-            }
+            _ = Task.Run(() => this.CheckConnectionToTranslator());
         }
 
         public void Dispose()
@@ -95,5 +78,29 @@ namespace DaCoblyn
         private void DrawUI() => this.WindowSystem.Draw();
 
         public void DrawConfigUI() => this.WindowSystem.OpenWindow(typeof(ConfigWindow));
+
+        private async void CheckConnectionToTranslator()
+        {
+            try
+            {
+                var httpClient = new HttpClient();
+                var connector = new LibreConnector(httpClient, Global.TranslateURI);
+                this.LanguageSupported = await connector.GetLanguageSupported() ?? new List<LibreLanguageResponse>()
+                {
+                    new LibreLanguageResponse() { Code = "en", Name = "English" },
+                    new LibreLanguageResponse() { Code = "ja", Name = "Japanese" },
+                };
+
+                this.ChatGui.PrintToGame("Successfully connected to translate server!");
+            }
+            catch (Exception e)
+            {
+                this.Configuration.EnablePlugin = false;
+                this.Configuration.Save();
+
+                this.ChatGui.PrintException(e);
+                this.ChatGui.PrintException(new Exception("Is it server worked? Reach the developer in Dalamud or Repository."));
+            }
+        }
     }
 }
